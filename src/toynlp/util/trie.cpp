@@ -20,45 +20,11 @@
 
 /**
  * @author	Binson Zhang <bin183cs@gmail.com>
- * @date		2013-3-16
+ * @date		2013-3-17
  */
 
-#ifndef TOYNLP_SEG_SEGMENTER_H_
-#define TOYNLP_SEG_SEGMENTER_H_
-
-#include <string>
-#include <vector>
-
-#include "token.h"
+#include "trie.h"
 
 namespace toynlp {
 
-struct SegmenterOptions {
-  std::string dict_path;
-  std::string stopwords_path;
-  SegmenterOptions() :
-      dict_path("../data/dict/dict.txt"), stopwords_path(
-          "../data/dict/stopwords.txt") {
-  }
-  std::string ToString() const;
-};
-
-/**
- * @brief Interface of Chinese Word Segmenter
- */
-class Segmenter {
-public:
-  Segmenter();
-  virtual ~Segmenter();
-
-  bool Init(const SegmenterOptions& options);
-  virtual bool Segment(const std::string& text,
-      std::vector<std::string>* tokens) const;
-  virtual bool Segment(const std::string& text,
-      std::vector<Token>* tokens) const;
-protected:
-  SegmenterOptions options_;
-};
-
 } /* namespace toynlp */
-#endif /* TOYNLP_SEG_SEGMENTER_H_ */

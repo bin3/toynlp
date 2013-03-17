@@ -10,4 +10,5 @@ fi
 
 cd ../bin
 
-./segmenter_main
+#./segmenter_main
+./trie_test
