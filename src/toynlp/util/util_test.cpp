@@ -20,50 +20,16 @@
 
 /**
  * @author	Binson Zhang <bin183cs@gmail.com>
- * @date		2013-3-16
+ * @date		2013-3-17
  */
 
-#include "segmenter.h"
-#include <sstream>
-
-#include <toynlp/util/util.h>
+#include "util.h"
+#include <gtest/gtest.h>
 
 namespace toynlp {
 
-std::string SegmenterOptions::ToString() const {
-  std::stringstream ss;
-  ss << NVC_(dict_path) << NV_(stopwords_path);
-  return ss.str();
-}
+TEST(Util, Method) {
 
-Segmenter::Segmenter() {
-}
-
-Segmenter::~Segmenter() {
-}
-
-bool Segmenter::Segment(const std::string& text,
-    std::vector<std::string>* tokens) const {
-  if (!tokens) return false;
-  tokens->clear();
-  // TODO
-  for (std::size_t i = 0; i < text.size(); ++i) {
-    tokens->push_back(std::string(1, text[i]));
-  }
-  return true;
-}
-
-bool Segmenter::Init(const SegmenterOptions& options) {
-  options_ = options;
-  return true;
-}
-
-bool Segmenter::Segment(const std::string& text,
-    std::vector<Token>* tokens) const {
-  if (!tokens) return false;
-  tokens->clear();
-  // TODO
-  return true;
 }
 
 } /* namespace toynlp */

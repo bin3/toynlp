@@ -33,6 +33,16 @@
 
 namespace toynlp {
 
+struct SegmenterOptions {
+  std::string dict_path;
+  std::string stopwords_path;
+  SegmenterOptions() :
+      dict_path("../data/dict/dict.txt"), stopwords_path(
+          "../data/dict/stopwords.txt") {
+  }
+  std::string ToString() const;
+};
+
 /**
  * @brief 
  */
@@ -41,8 +51,11 @@ public:
   Segmenter();
   virtual ~Segmenter();
 
+  bool Init(const SegmenterOptions& options);
   bool Segment(const std::string& text, std::vector<std::string>* tokens) const;
   bool Segment(const std::string& text, std::vector<Token>* tokens) const;
+private:
+  SegmenterOptions options_;
 };
 
 } /* namespace toynlp */

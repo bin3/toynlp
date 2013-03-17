@@ -26,6 +26,7 @@
 #include <iostream>
 #include <glog/logging.h>
 #include <gflags/gflags.h>
+
 #include <toynlp/seg/segmenter.h>
 
 int main(int argc, char **argv) {
@@ -36,7 +37,10 @@ int main(int argc, char **argv) {
 
   VLOG(0) << "------" << argv[0] << "------";
 
+  toynlp::SegmenterOptions options;
   toynlp::Segmenter seg;
+  VLOG(0) << "SegmenterOptions: " << options.ToString();
+  CHECK(seg.Init(options));
 
   std::string text = "Hello NLP";
   std::vector<std::string> tokens;

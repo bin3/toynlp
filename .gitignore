@@ -14,4 +14,6 @@
 
 # Eclipse project related files
 .*
+
 build
+bin/*
