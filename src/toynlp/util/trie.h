@@ -48,8 +48,7 @@ public:
     bool final;
     Char2Index l2c; // label to child
   };
-  Trie() :
-      root_(kRoot) {
+  Trie() {
     Clear();
   }
   virtual ~Trie() {
@@ -62,7 +61,7 @@ public:
    * @param val
    */
   void Insert(const Char* s, std::size_t n, Value val) {
-    Index cur = root_;
+    Index cur = kRoot;
     for (size_t i = 0; i < n; ++i) {
       cur = FindOrAdd(cur, s[i]);
     }
@@ -78,7 +77,7 @@ public:
    * @return true if totally matched
    */
   bool Match(const Char* s, std::size_t n, Value* val = NULL) {
-    Index cur = root_;
+    Index cur = kRoot;
     for (size_t i = 0; i < n; ++i) {
       cur = Find(cur, s[i]);
       if (cur == kNull) return false;
@@ -100,7 +99,7 @@ public:
   template<typename Container>
   bool PrefixMatch(const Char* s, std::size_t n, Container* c = NULL) {
     bool matched = false;
-    Index cur = root_;
+    Index cur = kRoot;
     for (size_t i = 0; i < n; ++i) {
       cur = Find(cur, s[i]);
       Node& nod = GetNode(cur);
@@ -115,6 +114,9 @@ public:
   std::size_t NumNodes() const {
     return nodes_.size() - kRoot;
   }
+  void Swap(const Trie<Value, Char, Index>& other) {
+    std::swap(nodes_, other.nodes_);
+  }
   void Clear() {
     nodes_.clear();
     while (nodes_.size() <= kRoot) {
@@ -125,7 +127,6 @@ private:
   const static uint32_t kNull = 0;
   const static uint32_t kRoot = 1;
 
-  Index root_;
   std::deque<Node> nodes_;
 
   Index NewNode(Char label = 0) {
