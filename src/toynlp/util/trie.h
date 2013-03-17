@@ -55,6 +55,12 @@ public:
   virtual ~Trie() {
   }
 
+  /**
+   * Insert a pattern
+   * @param s
+   * @param n
+   * @param val
+   */
   void Insert(const Char* s, std::size_t n, Value val) {
     Index cur = root_;
     for (size_t i = 0; i < n; ++i) {
@@ -64,6 +70,13 @@ public:
     nod.final = true;
     nod.val = val;
   }
+  /**
+   * Totally match the given string with a pattern
+   * @param s
+   * @param n
+   * @param val
+   * @return true if totally matched
+   */
   bool Match(const Char* s, std::size_t n, Value* val = NULL) {
     Index cur = root_;
     for (size_t i = 0; i < n; ++i) {
@@ -76,6 +89,28 @@ public:
       return true;
     }
     return false;
+  }
+  /**
+   * Find all the patterns matched by the prefix of the given string
+   * @param s
+   * @param n
+   * @param c the container to contain all the values related to matched patterns
+   * @return true if matched any one pattern
+   */
+  template<typename Container>
+  bool PrefixMatch(const Char* s, std::size_t n, Container* c = NULL) {
+    bool matched = false;
+    Index cur = root_;
+    for (size_t i = 0; i < n; ++i) {
+      cur = Find(cur, s[i]);
+      Node& nod = GetNode(cur);
+      if (nod.final) {
+        matched = true;
+        if (c) c->push_back(nod.val);
+      }
+      if (cur == kNull) break;
+    }
+    return matched;
   }
   std::size_t NumNodes() const {
     return nodes_.size() - kRoot;

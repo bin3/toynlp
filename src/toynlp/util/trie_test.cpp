@@ -40,13 +40,28 @@ TEST(Trie, Match) {
     EXPECT_TRUE(trie.Match(patterns[i].data(), patterns[i].size(), &val));
     EXPECT_EQ(i, val);
   }
-  std::string nopatterns[kN] = {"abcd", "a", "", "ac"};
+  std::string newpatterns[kN] = {"abcd", "a", "", "ac"};
   for (int i = 0; i < kN; ++i) {
-    EXPECT_FALSE(trie.Match(nopatterns[i].data(), nopatterns[i].size(), &val));
-    trie.Insert(nopatterns[i].data(), nopatterns[i].size(), i + kN);
-    EXPECT_TRUE(trie.Match(nopatterns[i].data(), nopatterns[i].size(), &val));
+    EXPECT_FALSE(trie.Match(newpatterns[i].data(), newpatterns[i].size(), &val));
+    trie.Insert(newpatterns[i].data(), newpatterns[i].size(), i + kN);
+    EXPECT_TRUE(trie.Match(newpatterns[i].data(), newpatterns[i].size(), &val));
     EXPECT_EQ(i + kN, val);
   }
+}
+
+TEST(Trie, PrefixMatch) {
+  const int kN = 4;
+  std::string patterns[kN] = {"abc", "ab", "bc", "c"};
+  Trie<int, char> trie;
+  for (int i = 0; i < kN; ++i) {
+    trie.Insert(patterns[i].data(), patterns[i].size(), i);
+  }
+  std::string text = "abcdef";
+  std::vector<int> vals;
+  ASSERT_TRUE(trie.PrefixMatch(text.data(), text.size(), &vals));
+  ASSERT_EQ(2U, vals.size());
+  EXPECT_EQ(1, vals[0]);
+  EXPECT_EQ(0, vals[1]);
 }
 
 } /* namespace toynlp */
