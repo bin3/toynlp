@@ -1,1 +1,1 @@
-add_test(trie_test)
+add_test(trie_test "")

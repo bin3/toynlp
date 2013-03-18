@@ -10,5 +10,6 @@ fi
 
 cd ../bin
 
-#./segmenter_main
-./trie_test
+#./trie_test
+./fmm_segmenter_test
+#./segmenter_main --log_dir=log/ --v=4

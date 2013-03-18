@@ -23,37 +23,32 @@
  * @date		2013-3-17
  */
 
-#ifndef TOYNLP_UTIL_UTIL_H_
-#define TOYNLP_UTIL_UTIL_H_
+#ifndef TOYNLP_SEG_FMM_SEGMENTER_H_
+#define TOYNLP_SEG_FMM_SEGMENTER_H_
 
-#include <fstream>
-#include <string>
+#include <toynlp/util/trie.h>
+#include "segmenter.h"
 
 namespace toynlp {
-namespace util {
 
-#define NV_(v) #v << "=" << v
-#define NVC_(v) NV_(v) << ", "
-#define NVE_(v) NV_(v) << "\n"
+/**
+ * @brief Forward Maximum Matching Segmenter
+ */
+class FMMSegmenter: public Segmenter {
+public:
+  FMMSegmenter();
+  virtual ~FMMSegmenter();
 
-template<typename Container>
-bool ReadLines(const std::string& path, Container* c) {
-  if (!c) return false;
-  std::ifstream ifs(path);
-  if (ifs) {
-    std::string line;
-    while (std::getline(ifs, line)) {
-      while (line.size() && (line.back() == '\n' || line.back() == '\r')) {
-        line.pop_back();
-      }
-      c->push_back(std::string());
-      c->back().swap(line);
-    }
-    return true;
-  }
-  return false;
-}
+  bool Init(const SegmenterOptions& options);
+  virtual bool Segment(const std::string& text,
+      std::vector<std::string>* tokens) const;
+  virtual bool Segment(const std::string& text,
+      std::vector<Token>* tokens) const;
+private:
+  typedef Trie<std::size_t, char> WordTrie;
+  std::vector<std::string> words_;
+  WordTrie trie_;
+};
 
-} /* namespace util */
 } /* namespace toynlp */
-#endif /* TOYNLP_UTIL_UTIL_H_ */
+#endif /* TOYNLP_SEG_FMM_SEGMENTER_H_ */

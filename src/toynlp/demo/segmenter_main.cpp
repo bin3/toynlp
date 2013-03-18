@@ -28,15 +28,10 @@
 #include <gflags/gflags.h>
 
 #include <toynlp/seg/segmenter.h>
+#include <toynlp/seg/fmm_segmenter.h>
 
-int main(int argc, char **argv) {
-  FLAGS_stderrthreshold = 0;
-//  FLAGS_log_dir = "log/";
-  google::ParseCommandLineFlags(&argc, &argv, true);
-  google::InitGoogleLogging(argv[0]);
-
-  VLOG(0) << "------" << argv[0] << "------";
-
+void SegmenterDemo() {
+  VLOG(0) << "[SegmenterDemo]";
   toynlp::SegmenterOptions options;
   toynlp::Segmenter seg;
   VLOG(0) << "SegmenterOptions: " << options.ToString();
@@ -49,6 +44,32 @@ int main(int argc, char **argv) {
   for (std::size_t i = 0; i < tokens.size(); ++i) {
     VLOG(0) << "token#" << i << ": " << tokens[i];
   }
+}
+
+void FMMSegmenterDemo() {
+  VLOG(0) << "[FMMSegmenterDemo]";
+  toynlp::SegmenterOptions options;
+  toynlp::FMMSegmenter seg;
+  CHECK(seg.Init(options));
+
+  std::string text = "2001年1月1日零时，随着新世纪钟声的响起，北京中华世纪坛礼花齐放，万民欢腾。";
+  std::vector<std::string> tokens;
+  VLOG(0) << "text: " << text;
+  CHECK(seg.Segment(text, &tokens));
+  for (std::size_t i = 0; i < tokens.size(); ++i) {
+    VLOG(0) << "token#" << i << " " << tokens[i];
+  }
+}
+
+int main(int argc, char **argv) {
+  FLAGS_stderrthreshold = 0;
+//  FLAGS_log_dir = "log/";
+  google::ParseCommandLineFlags(&argc, &argv, true);
+  google::InitGoogleLogging(argv[0]);
+
+  VLOG(0) << "------" << argv[0] << "------";
+  SegmenterDemo();
+  FMMSegmenterDemo();
 
   return 0;
 }

@@ -23,37 +23,23 @@
  * @date		2013-3-17
  */
 
-#ifndef TOYNLP_UTIL_UTIL_H_
-#define TOYNLP_UTIL_UTIL_H_
-
-#include <fstream>
-#include <string>
+#include "fmm_segmenter.h"
+#include <gtest/gtest.h>
+#include <glog/logging.h>
 
 namespace toynlp {
-namespace util {
 
-#define NV_(v) #v << "=" << v
-#define NVC_(v) NV_(v) << ", "
-#define NVE_(v) NV_(v) << "\n"
+TEST(FMMSegmenter, Segment) {
+  SegmenterOptions options;
+  FMMSegmenter seg;
+  ASSERT_TRUE(seg.Init(options));
 
-template<typename Container>
-bool ReadLines(const std::string& path, Container* c) {
-  if (!c) return false;
-  std::ifstream ifs(path);
-  if (ifs) {
-    std::string line;
-    while (std::getline(ifs, line)) {
-      while (line.size() && (line.back() == '\n' || line.back() == '\r')) {
-        line.pop_back();
-      }
-      c->push_back(std::string());
-      c->back().swap(line);
-    }
-    return true;
+  std::string text = "2001年1月1日零时，随着新世纪钟声的响起，北京中华世纪坛礼花齐放，万民欢腾。";
+  std::vector<std::string> tokens;
+  ASSERT_TRUE(seg.Segment(text, &tokens));
+  for (std::size_t i = 0; i < tokens.size(); ++i) {
+    VLOG(1) << "token#" << i << " " << tokens[i];
   }
-  return false;
 }
 
-} /* namespace util */
 } /* namespace toynlp */
-#endif /* TOYNLP_UTIL_UTIL_H_ */

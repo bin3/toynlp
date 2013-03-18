@@ -46,6 +46,7 @@ public:
     Char label;
     Value val;
     bool final;
+    // TODO
     Char2Index l2c; // label to child
   };
   Trie() {
@@ -70,19 +71,19 @@ public:
     nod.val = val;
   }
   /**
-   * Totally match the given string with a pattern
-   * @param s
-   * @param n
-   * @param val
+   * Find the pattern totally matched by the given string
+   * @param s the given string
+   * @param n the length of the given string
+   * @param val value of totally matched patterns
    * @return true if totally matched
    */
-  bool Match(const Char* s, std::size_t n, Value* val = NULL) {
+  bool Match(const Char* s, std::size_t n, Value* val = NULL) const {
     Index cur = kRoot;
     for (size_t i = 0; i < n; ++i) {
       cur = Find(cur, s[i]);
       if (cur == kNull) return false;
     }
-    Node& nod = GetNode(cur);
+    const Node& nod = GetNode(cur);
     if (nod.final) {
       if (val) *val = nod.val;
       return true;
@@ -91,18 +92,18 @@ public:
   }
   /**
    * Find all the patterns matched by the prefix of the given string
-   * @param s
-   * @param n
+   * @param s the given string
+   * @param n the length of the given string
    * @param c the container to contain all the values related to matched patterns
-   * @return true if matched any one pattern
+   * @return true if matched at least one pattern
    */
   template<typename Container>
-  bool PrefixMatch(const Char* s, std::size_t n, Container* c = NULL) {
+  bool PrefixMatch(const Char* s, std::size_t n, Container* c = NULL) const {
     bool matched = false;
     Index cur = kRoot;
     for (size_t i = 0; i < n; ++i) {
       cur = Find(cur, s[i]);
-      Node& nod = GetNode(cur);
+      const Node& nod = GetNode(cur);
       if (nod.final) {
         matched = true;
         if (c) c->push_back(nod.val);
@@ -114,8 +115,8 @@ public:
   std::size_t NumNodes() const {
     return nodes_.size() - kRoot;
   }
-  void Swap(const Trie<Value, Char, Index>& other) {
-    std::swap(nodes_, other.nodes_);
+  void Swap(Trie<Value, Char, Index>& other) {
+    nodes_.swap(other.nodes_);
   }
   void Clear() {
     nodes_.clear();
@@ -136,6 +137,9 @@ private:
   Node& GetNode(Index idx) {
     return nodes_[idx];
   }
+  const Node& GetNode(Index idx) const {
+    return nodes_[idx];
+  }
   Index FindOrAdd(Index parent, Char label) {
     Node& p = GetNode(parent);
     if (!p.l2c.count(label)) {
@@ -143,9 +147,9 @@ private:
     }
     return p.l2c[label];
   }
-  Index Find(Index parent, Char label) {
-    Node& p = GetNode(parent);
-    typename Char2Index::iterator i = p.l2c.find(label);
+  Index Find(Index parent, Char label) const {
+    const Node& p = GetNode(parent);
+    typename Char2Index::const_iterator i = p.l2c.find(label);
     if (i != p.l2c.end())
       return i->second;
     else
